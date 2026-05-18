@@ -44,22 +44,18 @@ pip install vllm openai google-generativeai tqdm
 
 ### 2.1 从 Hugging Face 下载（推荐）
 
-> 请将下面命令中的 `<HF_DATASET_REPO>` 替换为实际数据集地址（例如 `org_name/SEA-Vision-QA`）。
-
 ```bash
 pip install -U "huggingface_hub[cli]"
 mkdir -p data
 
-huggingface-cli download <HF_DATASET_REPO> all_qa_data.jsonl \
-  --repo-type dataset \
-  --local-dir data
-
-huggingface-cli download <HF_DATASET_REPO> images_11langs.tar.gz \
+huggingface-cli download xingranzhao/SEA-Vision images_11langs.tar.gz \
   --repo-type dataset \
   --local-dir data
 
 tar -xzf data/images_11langs.tar.gz -C data
 ```
+
+> `all_qa_data.jsonl` 已随 GitHub 代码仓库一同分发，位于 `TEC-VQA/data/all_qa_data.jsonl`，无需单独下载。
 
 ### 2.2 目录校验
 

@@ -84,17 +84,18 @@ You can either grab the **official SEA-DocBench dataset** below, or bring your o
 The released dataset contains 15,234 document page images plus the matching ground-truth JSON.
 
 ```bash
-# 1. Download (artefacts are distributed separately from this repo; replace <DOWNLOAD_URL>
-#    with the location given on the project page / dataset release).
-wget <DOWNLOAD_URL>/SEA-DocBench-images.tar.gz -O SEA-DocBench-images.tar.gz
-wget <DOWNLOAD_URL>/SEA-DocBench-gt.json      -O ground_truth.json
+# 1. Download from Hugging Face.
+pip install -U "huggingface_hub[cli]"
+huggingface-cli download xingranzhao/SEA-Vision SEA-DocBench-images.tar.gz \
+    --repo-type dataset \
+    --local-dir .
 
 # 2. Extract into ./data/. The archive already contains a top-level `images/` directory,
 #    so this places the images at ./data/images/<filename>.jpg.
 tar xzf SEA-DocBench-images.tar.gz -C ./data/
 
-# 3. Drop the ground-truth JSON in place.
-mv ground_truth.json ./data/ground_truth.json
+# 3. Ground-truth JSON: not yet released on Hugging Face. Place it at
+#    ./data/ground_truth.json once you obtain it (see the schema below).
 ```
 
 After extraction the layout should be:

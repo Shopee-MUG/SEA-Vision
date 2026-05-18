@@ -113,14 +113,14 @@ API-based inference (OpenAI, Gemini) and MiniCPM-V-4_5 each have their own scrip
 
 ## Data distribution
 
-The actual benchmark data is hosted on Hugging Face (links to be filled in at release time):
+The actual benchmark data is hosted on Hugging Face at **[`xingranzhao/SEA-Vision`](https://huggingface.co/datasets/xingranzhao/SEA-Vision)**:
 
-| Artefact                          | Sub-benchmark   | How to obtain                                                         |
-| --------------------------------- | --------------- | --------------------------------------------------------------------- |
-| `SEA-DocBench-images.tar.gz` (≈14 GB, 15,234 images) | SEA-DocBench    | Download from HF dataset release, extract into `SEA-DocBench/data/`.  |
-| Ground-truth JSON                 | SEA-DocBench    | Download from HF dataset release, place at `SEA-DocBench/data/ground_truth.json`. |
-| `all_qa_data.jsonl` (QA pairs)    | TEC-VQA         | Download from HF dataset release, place at `TEC-VQA/data/`.           |
-| `images_11langs.tar.gz` (≈1.9 GB) | TEC-VQA         | Download from HF dataset release, extract into `TEC-VQA/data/`.       |
+| Artefact                          | Sub-benchmark   | How to obtain                                                                                       |
+| --------------------------------- | --------------- | --------------------------------------------------------------------------------------------------- |
+| `SEA-DocBench-images.tar.gz` (≈14 GB, 15,234 images) | SEA-DocBench    | `huggingface-cli download xingranzhao/SEA-Vision SEA-DocBench-images.tar.gz --repo-type dataset --local-dir .` |
+| Ground-truth JSON                 | SEA-DocBench    | Not yet released on HF; see [`SEA-DocBench/README.md`](./SEA-DocBench/README.md) for the schema and how to bring your own. |
+| `all_qa_data.jsonl` (QA pairs)    | TEC-VQA         | Ships with this Git repo at `TEC-VQA/data/all_qa_data.jsonl` — no separate download needed.         |
+| `images_11langs.tar.gz` (≈1.9 GB) | TEC-VQA         | `huggingface-cli download xingranzhao/SEA-Vision images_11langs.tar.gz --repo-type dataset --local-dir TEC-VQA/data` |
 
 Concrete download commands and dataset schemas live in each sub-benchmark's README.
 
