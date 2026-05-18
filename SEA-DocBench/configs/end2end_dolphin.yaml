@@ -1,0 +1,30 @@
+end2end_eval:
+  metrics:
+    text_block:
+      metric:
+        - Edit_dist
+        # - BLEU
+        # - METEOR
+    display_formula:
+      metric:
+        - Edit_dist
+        - CDM_plain  # CDM can be calculated directly by calling CDM in config file if you have CDM environment
+    table:
+      metric:
+        - TEDS
+        - Edit_dist
+    reading_order:
+      metric:
+        - Edit_dist
+  dataset:
+    dataset_name: end2end_dataset
+    ground_truth:
+      # Path to the ground-truth JSON. See README "Data Preparation" for the schema.
+      data_path: ./data/ground_truth.json
+    prediction:
+      # Directory containing one Markdown (.md) file per sample, produced in Step 1 (inference).
+      # The basename of each .md should match the image filename in the GT JSON.
+      data_path: ./outputs/dolphin
+    match_method: quick_match
+    # filter:
+    #   language: english

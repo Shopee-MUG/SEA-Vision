@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
+
+# venv
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# TEC-VQA: dataset & runtime artefacts (distributed separately, not tracked).
+# The data/ directory itself is kept via .gitkeep, and the QA annotations
+# (`all_qa_data.jsonl`, ~2.8 MB) ship with the repo as the benchmark sample.
+data/*
+!data/.gitkeep
+!data/all_qa_data.jsonl

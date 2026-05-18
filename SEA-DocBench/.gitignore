@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Logs
+*.log
+**/logs/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# SEA-DocBench: evaluation artifacts (regenerated each run)
+metrics/result/
+result/
+result_v*/
+excels/
+excels.tar
+*.xlsx
+formula_excels/
+signatures/
+Select/
+
+# SEA-DocBench: user data and runtime outputs
+# (the directories themselves are kept via .gitkeep)
+data/*
+!data/.gitkeep
+outputs/*
+!outputs/.gitkeep
