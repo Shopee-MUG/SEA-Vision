@@ -1,48 +1,49 @@
-# SEA-Vision TEC-VQA (QA) 评测
+# SEA-Vision TEC-VQA
 
-**SEA-Vision: A Multilingual Benchmark for Comprehensive Document and Scene Text Understanding in Southeast Asia** 中 TEC-VQA（QA）子任务的推理与评测流程。
+Inference and evaluation pipeline for the **TEC-VQA** sub-task of:
 
-> 大体量图片文件 `images_11langs.tar.gz` 将上传到 Hugging Face，需要额外下载（不会默认随代码仓库分发）。
+> **SEA-Vision: A Multilingual Benchmark for Comprehensive Document and Scene Text Understanding in Southeast Asia** (CVPR 2026)
+> [[Paper]](https://arxiv.org/abs/2603.15409) | [[Project Page]](https://swagger-coder.github.io/sea-vision-page/) | [[Dataset]](https://huggingface.co/datasets/xingranzhao/SEA-Vision)
+
+> The large image archive `images_11langs.tar.gz` is hosted on Hugging Face and must be downloaded separately (it is not distributed with the code repository).
 >
-> 下文所有命令默认在 `TEC-VQA/` 目录下执行（先 `cd TEC-VQA`）。
+> All commands below assume you are inside the `TEC-VQA/` directory (`cd TEC-VQA` first).
 
 ---
 
-## 项目概览 (Overview)
+## Overview
 
-- 任务：文本中心视觉问答（TEC-VQA / QA）
-- 语言覆盖：11 种东南亚常见语言（EN / ZH / VI / TH / FIL / MS / ID / LO / KM / MY / PT）
-- 推理方式：
-  - 本地 vLLM：Qwen / InternVL / Ovis / MiniCPM-V-4_5 等
-  - API：OpenAI / Gemini 等
-- 评测： `acc.py`
+- **Task:** Text-Centric Visual Question Answering (TEC-VQA)
+- **Languages:** 11 Southeast Asian languages — EN / ZH / VI / TH / FIL / MS / ID / LO / KM / MY / PT
+- **QA pairs:** 7,496 pairs across 1,839 images, annotated with five capability labels: text recognition, numerical calculation, comparative analysis, logical reasoning, and spatial understanding
+- **Inference backends:**
+  - Local vLLM: Qwen / InternVL / Ovis / MiniCPM-V-4_5, etc.
+  - API: OpenAI / Gemini, etc.
+- **Evaluation:** `acc.py`
 
 ---
 
-## 快速开始 (Quick Start)
+## Quick Start
 
-### 1) 环境准备
+### 1. Environment
 
-建议使用 Python 3.10+。
+Python 3.10+ is recommended.
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -U pip
-```
-
-```bash
 pip install vllm openai google-generativeai tqdm
 ```
 
-### 2) 数据准备
+### 2. Data Setup
 
-请确保 `data/` 下至少包含：
+Ensure `data/` contains at least:
 
 - `all_qa_data.jsonl`
-- `images/`（解压后的 11 语言图片目录）
+- `images/` (the extracted 11-language image directory)
 
-### 2.1 从 Hugging Face 下载（推荐）
+#### 2.1 Download from Hugging Face (recommended)
 
 ```bash
 pip install -U "huggingface_hub[cli]"
@@ -55,11 +56,11 @@ huggingface-cli download xingranzhao/SEA-Vision images_11langs.tar.gz \
 tar -xzf data/images_11langs.tar.gz -C data
 ```
 
-> `all_qa_data.jsonl` 已随 GitHub 代码仓库一同分发，位于 `TEC-VQA/data/all_qa_data.jsonl`，无需单独下载。
+> `all_qa_data.jsonl` ships with this Git repository at `TEC-VQA/data/all_qa_data.jsonl` — no separate download is needed.
 
-### 2.2 目录校验
+#### 2.2 Verify Directory Structure
 
-解压完成后，目录应类似：
+After extraction the layout should look like:
 
 ```text
 data/
@@ -81,7 +82,7 @@ data/
 
 ---
 
-## 目录结构 (Directory Layout)
+## Directory Layout
 
 ```text
 TEC-VQA/
@@ -112,11 +113,11 @@ TEC-VQA/
 
 ---
 
-## 评测脚本使用 (Evaluation Scripts)
+## Running Inference
 
-所有命令默认从 `TEC-VQA/qa_eval` 执行。
+All commands below are executed from inside `TEC-VQA/qa_eval/`.
 
-### 1) vLLM（Qwen / InternVL / Ovis 统一脚本）
+### 1. vLLM — Qwen / InternVL / Ovis (unified script)
 
 ```bash
 cd qa_eval
@@ -127,13 +128,13 @@ python vllm_qwen_intern_ovis_batchQA.py \
   --output_jsonl ../data/qa_results/<model_name>.jsonl
 ```
 
-InternVL / Ovis 可额外指定：
+For InternVL / Ovis, you can additionally specify:
 
 ```bash
---processor_dir /path/to/processor
+  --processor_dir /path/to/processor
 ```
 
-### 2) vLLM（MiniCPM-V-4_5）
+### 2. vLLM — MiniCPM-V-4_5
 
 ```bash
 cd qa_eval
@@ -144,7 +145,7 @@ python vllm_minicpmv4_5_batchQA.py \
   --output_jsonl ../data/qa_results/<model_name>.jsonl
 ```
 
-### 3) OpenAI API（官方接口）
+### 3. OpenAI API
 
 ```bash
 export OPENAI_API_KEY=""
@@ -156,7 +157,7 @@ python api_gpt.py \
   --output_jsonl ../data/qa_results/gpt-4o.jsonl
 ```
 
-### 4) Gemini API（官方接口）
+### 4. Gemini API
 
 ```bash
 export GEMINI_API_KEY=""
@@ -168,20 +169,20 @@ python api_gemini.py \
   --output_jsonl ../data/qa_results/gemini-2.5-pro.jsonl
 ```
 
-### 5) 准确率统计
+### 5. Accuracy Evaluation
 
 ```bash
 cd qa_eval
 python acc.py ../data/qa_results --mode md
 ```
 
-如果结果 jsonl 中没有 `最终答案` 字段，`acc.py` 会回退读取：
+If a result JSONL does not contain a `最终答案` field, `acc.py` falls back to reading from:
 
 ```text
 ../data/all_qa_data.jsonl
 ```
 
-关闭回退模式：
+To disable the fallback:
 
 ```bash
 python acc.py ../data/qa_results --mode md --no_data_fallback
@@ -189,51 +190,45 @@ python acc.py ../data/qa_results --mode md --no_data_fallback
 
 ---
 
-## 输出格式建议 (Output Format)
+## Output Format
 
-为保证 `acc.py` 统计稳定，建议模型输出 jsonl 至少包含样本标识与可评测答案字段。
-若脚本产物中包含 `最终答案` 字段，会被优先用于计算准确率。
+To ensure stable scoring by `acc.py`, each output JSONL should contain at minimum a sample identifier and an evaluable answer field. If the output includes a `最终答案` field, it is used preferentially for accuracy calculation.
 
-示例（字段名以实际脚本解析逻辑为准）：
+Example (exact field names follow each script's parsing logic):
 
 ```json
-{"id":"sample_0001","question":"...","model_output":"...","最终答案":"..."}
+{"id": "sample_0001", "question": "...", "model_output": "...", "最终答案": "..."}
 ```
 
 ---
 
-## 常见问题 (FAQ)
+## FAQ
 
-### Q1: 仓库里没有完整图片数据？
+**Q1: The repository doesn't contain the full image data.**  
+The image archive is large and hosted externally. Download `images_11langs.tar.gz` from Hugging Face and extract it into `data/` as described above.
 
-图片压缩包体积较大，采用外部托管。请从 Hugging Face 额外下载 `images_11langs.tar.gz` 并解压到 `data/`。
+**Q2: Script reports missing image files.**  
+Check that:
+- `--image_base_dir` points to `../data/images`
+- The relative image paths in `all_qa_data.jsonl` match the extraction directory
+- Your system locale can read the Chinese directory names correctly
 
-### Q2: 报错提示找不到图片文件？
-
-请检查：
-
-- `--image_base_dir` 是否指向 `../data/images`
-- `all_qa_data.jsonl` 中图片相对路径是否与解压目录一致
-- 中文路径在当前系统 locale 下是否可正常读取
-
-### Q3: API 调用速度慢或限流怎么办？
-
-建议增加请求重试、并发控制与断点续跑机制；必要时先在小子集上验证脚本配置。
+**Q3: API calls are slow or rate-limited.**  
+Add retry logic, concurrency control, and checkpoint-resume support. Validate your script configuration on a small subset first.
 
 ---
 
-## TODO / 待完善
+## TODO
 
-- [ ] 补充 Hugging Face 数据集的正式下载链接
-- [ ] 补充统一 `requirements.txt`
-- [ ] 补充更多基线模型结果与复现实验配置
-- [ ] 增加评测结果可视化脚本
+- [ ] Add a unified `requirements.txt`
+- [ ] Add more baseline model results and reproduction configs
+- [ ] Add an evaluation result visualization script
 
 ---
 
 ## Citation
 
-如果本仓库对你的研究有帮助，请引用：
+If this repository is useful for your research, please cite:
 
 ```bibtex
 @inproceedings{yue2026seavision,
@@ -248,11 +243,10 @@ python acc.py ../data/qa_results --mode md --no_data_fallback
 
 ## License
 
-许可证将在正式开源版本中补充。
-在此之前，请仅将代码与数据用于学术研究用途，并遵守各模型/API/数据源的使用条款。
+The license will be specified in the official open-source release. Until then, please use the code and data for academic research purposes only and comply with the terms of each upstream model / API / data source.
 
 ---
 
 ## Contact
 
-如有问题，欢迎提交 Issue 或联系仓库维护者。
+Questions and issues are welcome — please file an issue on the repository or contact the maintainers directly.
